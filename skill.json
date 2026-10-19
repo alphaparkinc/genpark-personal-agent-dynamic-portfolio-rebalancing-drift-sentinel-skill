@@ -1,0 +1,97 @@
+{
+  "name": "genpark-personal-agent-dynamic-portfolio-rebalancing-drift-sentinel-skill",
+  "title": "Dynamic Portfolio Rebalancing & Asset Drift Sentinel Skill",
+  "version": "1.0.0",
+  "description": "Multi-asset class allocation drift monitoring, tax-efficient threshold rebalancing (tolerance bands), dividend cash drag reinvestment, and transaction friction minimization for personal wealth agents. Built for GenPark (https://www.genpark.ai).",
+  "homepage": "https://www.genpark.ai",
+  "organization": {
+    "name": "GenPark Inc.",
+    "url": "https://www.genpark.ai",
+    "linkedin": "https://www.linkedin.com/company/92955550"
+  },
+  "mcp_version": "2024-11-05",
+  "category": "personal-agent",
+  "tools": [
+    {
+      "name": "audit_portfolio_asset_drift",
+      "description": "Calculate allocation variance against target asset weights (e.g. US Equities, Int'l Equities, Bonds, Real Assets) and identify rebalancing triggers.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "total_portfolio_value_usd": {
+            "type": "number"
+          },
+          "tolerance_band_pct": {
+            "type": "number",
+            "description": "e.g. 5.0 for +/- 5% relative drift trigger"
+          },
+          "allocations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "asset_class": {
+                  "type": "string"
+                },
+                "target_weight_pct": {
+                  "type": "number"
+                },
+                "current_value_usd": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "asset_class",
+                "target_weight_pct",
+                "current_value_usd"
+              ]
+            }
+          }
+        },
+        "required": [
+          "total_portfolio_value_usd",
+          "tolerance_band_pct",
+          "allocations"
+        ]
+      }
+    },
+    {
+      "name": "synthesize_tax_efficient_rebalance_orders",
+      "description": "Generate buy/sell trade orders or inbound cash routing to restore target weights while minimizing capital gains taxable events.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "incoming_cash_flow_usd": {
+            "type": "number"
+          },
+          "drifted_allocations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "asset_class": {
+                  "type": "string"
+                },
+                "current_value_usd": {
+                  "type": "number"
+                },
+                "target_value_usd": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "asset_class",
+                "current_value_usd",
+                "target_value_usd"
+              ]
+            }
+          }
+        },
+        "required": [
+          "incoming_cash_flow_usd",
+          "drifted_allocations"
+        ]
+      }
+    }
+  ]
+}
